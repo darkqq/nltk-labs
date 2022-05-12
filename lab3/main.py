@@ -57,22 +57,6 @@ def save_docx():
     doc.save(file)
 
 
-help_info = """Система семантического анализа естественного языка
-
-Система позволяет провести семантический анализ предложения анлглийского языка, загрузить предложение из файла, а также сохранить предложение в файл в формате docx.
-
-Результат семантического анализ предложения представлен в виде дерева, узлами которого являются лексемы и их определение, синонимы, антонимы, гипонимы и гиперонимы.
-
-Для проведения семантического анализа необходимо ввести текст в верхнее поле и затем нажать кнопку "Создать".
-Для сохранение необходимо нажать кнопку "Сохранить", в появившемся окне выбрать нужный файл или задать имя новому файлу.
-Для открытия словаря необходимо нажать пункт меню "Файл", в появившемся окне выбрать нужный файл.
-"""
-
-
-def information():
-    messagebox.askquestion("Help", help_info, type='ok')
-
-
 def draw_semantic_tree():
     canvas.canvas().delete("all")
     start = time.time()
@@ -80,7 +64,6 @@ def draw_semantic_tree():
     text = text.replace('\n', '')
     if text != '':
         sentences = nltk.sent_tokenize(text)
-        enter_text.insert(END, '\nPlease waiting. Semantic tree is drawing')
         root.update()
         result = '(S '
         for sent in sentences:
@@ -100,8 +83,15 @@ def draw_semantic_tree():
 
     finish = time.time()
     delta = finish - start
-    enter_text.delete(enter_text.search('\nPlease waiting. Semantic tree is drawing', 1.0, END), END)
     print('draw tree: ', delta)
+
+
+def load_file():
+    file_path = askopenfilename(filetypes=[('Txt Files', '*txt')])
+    if file_path is not None:
+        f = open(file_path, "r", encoding="UTF-8")
+        enter_text.delete(1.0, "end")
+        enter_text.insert(1.0, f.read())
 
 
 def get_word_semantic(word: str) -> str:
@@ -147,7 +137,7 @@ def get_word_semantic(word: str) -> str:
 
 main_menu = Menu(root)
 main_menu.add_command(label='Файл', command=open_file_and_input_text)
-main_menu.add_command(label='Помощь', command=information)
+main_menu.add_command(label='Загрузить файл', command=load_file)
 root.config(menu=main_menu)
 
 button1 = Button(text="Создать", command=draw_semantic_tree)

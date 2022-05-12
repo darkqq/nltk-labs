@@ -46,6 +46,12 @@ def open_file_and_input_text():
         enter_text.delete(1.0, END)
         enter_text.insert(1.0, text)
 
+def load_file():
+    file_path = askopenfilename(filetypes=[('Txt Files', '*txt')])
+    if file_path is not None:
+        f = open(file_path, "r", encoding="UTF-8")
+        enter_text.delete(1.0, "end")
+        enter_text.insert(1.0, f.read())
 
 def save_docx():
     file = asksaveasfilename(filetypes=(("Docx file", "*.docx"),), defaultextension=("Docx file", "*.docx"))
@@ -91,6 +97,7 @@ def draw_syntax_tree():
 
 
 main_menu = Menu(root)
+main_menu.add_command(label='Загрузить файл', command=load_file)
 main_menu.add_command(label='Файл', command=open_file_and_input_text)
 
 root.config(menu=main_menu)

@@ -4,11 +4,11 @@ from xml.dom import minidom
 
 from tkinter import messagebox as mb
 import main
-from tkinter.filedialog import askopenfilename, asksaveasfile
+from tkinter.filedialog import askopenfilename, asksaveasfile, askopenfile
 
 
 def pars(event):
-    starttime=time.time()
+    starttime = time.time()
     string = enter_text.get(1.0, END)
     string = string.replace('.', '')
     string = string.replace(',', '')
@@ -29,7 +29,15 @@ def pars(event):
             words.insert(1.0, i[1].lexeme + '\n')
             word_tag.insert(1.0, i[1].tags + '\n')
             word_description.insert(1.0, i[1].part_of_sent + '\n')
-    print(time.time()-starttime)
+    print(time.time() - starttime)
+
+
+def load_file():
+    file_path = askopenfilename(filetypes=[('Txt Files', '*txt')])
+    if file_path is not None:
+        f = open(file_path, "r", encoding="UTF-8")
+        enter_text.delete(1.0, "end")
+        enter_text.insert(1.0, f.read())
 
 
 def scroll(*args):
@@ -108,6 +116,7 @@ def open_file(event=None):
 root = Tk()
 mainmenu = Menu(root)
 mainmenu.add_command(label='Файл', command=open_file)
+mainmenu.add_command(label='Загрузить файл', command=load_file)
 root.config(menu=mainmenu)
 
 label_frame = Frame(root)
@@ -168,5 +177,3 @@ root.bind('<Control-o>', open_file)
 save.pack(side=LEFT)
 
 root.mainloop()
-
-
